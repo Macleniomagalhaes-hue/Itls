@@ -1,0 +1,1401 @@
+/*
+   IPPLS – Instituto Politécnico Privado Lucrécio dos Santos
+   css/styles.css
+
+   Índice
+    1. Variáveis
+    2. Base
+    3. Tipografia e cabeçalhos de secção
+    4. Cabeçalho e menu
+    5. Hero
+    6. Secções gerais
+    7. Cards
+    8. Cursos
+    9. Estatísticas
+   10. Testemunhos
+   11. Contactos
+   12. Mapa
+   13. Rodapé
+   14. Animações
+   15. Responsividade
+   16. Impressão
+ */
+
+
+/*  1. VARIÁVEIS */
+:root {
+  /* Paleta institucional */
+  --azul: #18335d;         /* cabeçalho, rodapé e texto principal */
+  --azul-medio: #1e5e87;   /* hero e estatísticas */
+  --ouro: #e8be49;         /* destaque principal */
+  --cobre: #c87b32;        /* barras e detalhes gráficos */
+  --cobre-texto: #9a5a1f;  /* cobre escurecido, para texto pequeno (contraste AA) */
+  --areia: #dac087;        /* secções de apoio */
+
+  /* Neutros */
+  --branco: #ffffff;
+  --papel: #f8f6f1;
+  --texto: #364a6e;
+  --linha: rgb(24 51 93 / 0.12);
+
+  /* Tipografia (fontes do sistema, sem pedidos externos) */
+  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+
+  /* Layout: o gutter mantém o conteúdo centrado até --largura */
+  --largura: 1180px;
+  --gutter: max(1.25rem, calc((100% - var(--largura)) / 2));
+  --espaco-secao: clamp(3.5rem, 8vw, 6.5rem);
+  --altura-header: 4.5rem;
+  --raio: 6px;
+
+  /* Sombras */
+  --sombra-1: 0 1px 2px rgb(24 51 93 / 0.06), 0 8px 24px -14px rgb(24 51 93 / 0.22);
+  --sombra-2: 0 2px 4px rgb(24 51 93 / 0.08), 0 20px 36px -18px rgb(24 51 93 / 0.32);
+
+  /* Movimento */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --rapido: 0.2s;
+}
+
+
+/*2. BASE*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--altura-header) + 0.75rem);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--papel);
+  color: var(--azul);
+  font-family: var(--fonte);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+h1, h2, h3, p, ul, ol, dl, dd, blockquote, figure {
+  margin: 0;
+}
+
+ul, ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Foco visível: azul sobre fundos claros, ouro sobre fundos escuros */
+:focus-visible {
+  outline: 3px solid var(--foco, var(--azul));
+  outline-offset: 3px;
+}
+
+.navegacao,
+.hero,
+.missao,
+.estatisticas,
+.rodape {
+  --foco: var(--ouro);
+}
+
+/* Bloqueia o scroll com o menu aberto */
+.menu-aberto {
+  overflow: hidden;
+}
+
+/* Ícones em SVG (sprite no início do body) */
+.icone {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Texto só para leitores de ecrã */
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Ligação para saltar a navegação */
+.salto {
+  position: absolute;
+  top: -4rem;
+  left: 1rem;
+  z-index: 2000;
+  padding: 0.75rem 1.1rem;
+  background: var(--ouro);
+  color: var(--azul);
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: var(--raio);
+  transition: top var(--rapido) var(--ease);
+}
+
+.salto:focus {
+  top: 1rem;
+}
+
+
+/*
+   3. TIPOGRAFIA E CABEÇALHOS DE SECÇÃO
+*/
+h1, h2, h3 {
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Rótulo acima do título (ex.: "SOBRE NÓS") */
+.rotulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--rotulo-cor, var(--azul));
+}
+
+.rotulo::before {
+  content: "";
+  width: 2rem;
+  height: 3px;
+  background: var(--barra, var(--cobre));
+}
+
+.secao-cabecalho h2 {
+  max-width: 24ch;
+  margin-top: 0.9rem;
+  font-size: clamp(1.75rem, 4.2vw, 2.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--titulo-cor, var(--azul));
+}
+
+
+/*
+   4. CABEÇALHO E MENU
+ */
+.navegacao {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--azul);
+  border-bottom: 3px solid var(--ouro);
+  transition: box-shadow 0.25s var(--ease);
+}
+
+/* Classe aplicada pelo JavaScript quando a página é rolada */
+.navegacao.rolado {
+  box-shadow: 0 8px 20px -12px rgb(0 0 0 / 0.6);
+}
+
+.navegacao nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--altura-header);
+  padding-inline: var(--gutter);
+}
+
+/* Marca: logotipo + sigla + nome completo (usada também no rodapé) */
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+  color: var(--branco);
+  text-decoration: none;
+}
+
+/* O logotipo tem o barrete azul-escuro, por isso assenta num fundo branco */
+.marca-logo {
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 0.3rem 0.45rem;
+  background: var(--branco);
+  border-radius: var(--raio);
+}
+
+.marca-logo img {
+  width: 3.4rem;
+}
+
+.marca-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.marca-sigla {
+  font-size: clamp(1.45rem, 4vw, 1.75rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  transition: color var(--rapido) var(--ease);
+}
+
+.marca:hover .marca-sigla {
+  color: var(--ouro);
+}
+
+.marca-nome {
+  max-width: 15rem;
+  font-size: 0.64rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  color: var(--areia);
+}
+
+/* Botão hambúrguer */
+.menu-hamburguer {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--raio);
+  cursor: pointer;
+  transition: background var(--rapido) var(--ease);
+}
+
+.menu-hamburguer:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+.menu-hamburguer span {
+  width: 1.4rem;
+  height: 2px;
+  background: var(--branco);
+  border-radius: 2px;
+  transition: transform 0.3s var(--ease), opacity 0.2s var(--ease);
+}
+
+.menu-hamburguer[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-hamburguer[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-hamburguer[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Menu: painel lateral em telemóvel e tablet */
+#menu-principal {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(86vw, 340px);
+  height: 100vh;
+  height: 100dvh;
+  padding: calc(var(--altura-header) + 1rem) 1.5rem 2rem;
+  overflow-y: auto;
+  background: var(--azul);
+  border-left: 3px solid var(--ouro);
+  visibility: hidden;
+  transform: translateX(100%);
+  transition: transform 0.3s var(--ease), visibility 0s linear 0.3s;
+}
+
+#menu-principal li + li {
+  border-top: 1px solid rgb(255 255 255 / 0.1);
+}
+
+#menu-principal a {
+  position: relative;
+  display: block;
+  padding: 1rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--branco);
+  text-decoration: none;
+  transition: color var(--rapido) var(--ease), padding var(--rapido) var(--ease);
+}
+
+#menu-principal a:hover,
+#menu-principal a:focus-visible,
+#menu-principal a[aria-current] {
+  color: var(--ouro);
+}
+
+#menu-principal a:hover {
+  padding-left: 0.5rem;
+}
+
+.menu-aberto #menu-principal {
+  visibility: visible;
+  transform: none;
+  box-shadow: -18px 0 40px rgb(0 0 0 / 0.25);
+  transition-delay: 0s;
+}
+
+/* Fundo escurecido atrás do menu aberto */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgb(9 22 44 / 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
+.menu-aberto .menu-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/*
+   5. HERO
+*/
+.hero {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4rem);
+  align-items: center;
+  padding: clamp(3rem, 8vw, 6rem) var(--gutter);
+  color: var(--branco);
+  background-color: var(--azul-medio);
+  /* Quadrícula fina, lembra papel milimétrico de desenho técnico */
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.hero-texto {
+  min-width: 0;
+}
+
+.hero-local {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.92);
+}
+
+.hero-local::before {
+  content: "";
+  flex: none;
+  width: 3rem;
+  height: 4px;
+  background: var(--ouro);
+}
+
+.hero h1 {
+  max-width: 18ch;
+  font-size: clamp(2.3rem, 5vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--branco);
+}
+
+.hero h1 span {
+  display: block;
+  color: var(--ouro);
+}
+
+.hero-descricao {
+  max-width: 52ch;
+  margin: 1.5rem 0 2rem;
+  font-size: clamp(1.02rem, 2vw, 1.2rem);
+  line-height: 1.7;
+  color: rgb(255 255 255 / 0.9);
+}
+
+.hero-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+}
+
+.hero-botoes a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  transition: background var(--rapido) var(--ease), color var(--rapido) var(--ease),
+    border-color var(--rapido) var(--ease), transform var(--rapido) var(--ease);
+}
+
+/* Ação principal */
+.hero-botoes a:first-child {
+  background: var(--ouro);
+  border-color: var(--ouro);
+  color: var(--azul);
+}
+
+.hero-botoes a:first-child:hover {
+  background: color-mix(in srgb, var(--ouro), white 28%);
+  border-color: color-mix(in srgb, var(--ouro), white 28%);
+  transform: translateY(-2px);
+}
+
+/* Ação secundária */
+.hero-botoes a:last-child {
+  background: transparent;
+  border-color: var(--areia);
+  color: var(--branco);
+}
+
+.hero-botoes a:last-child:hover {
+  background: var(--areia);
+  color: var(--azul);
+  transform: translateY(-2px);
+}
+
+/* Imagem com moldura deslocada */
+.hero-imagem {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+}
+
+.hero-imagem::before {
+  content: "";
+  position: absolute;
+  inset: 0.75rem -0.75rem -0.75rem 0.75rem;
+  z-index: -1;
+  border: 3px solid var(--ouro);
+  border-radius: var(--raio);
+}
+
+.hero-imagem img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--raio);
+  box-shadow: 0 24px 44px -24px rgb(0 0 0 / 0.5);
+}
+
+
+/*
+   6. SECÇÕES GERAIS
+ */
+.sobre,
+.diferenciais,
+.missao,
+.cursos,
+.estrutura,
+.testemunhos,
+.contactos,
+.mapa {
+  padding: var(--espaco-secao) var(--gutter);
+}
+
+/* Quem somos: cabeçalho e texto lado a lado no desktop */
+.sobre {
+  display: grid;
+  background: var(--branco);
+}
+
+.sobre > p {
+  max-width: 62ch;
+  margin-top: 1.75rem;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--cobre);
+  font-size: clamp(1.02rem, 1.8vw, 1.15rem);
+  line-height: 1.8;
+  color: var(--texto);
+}
+
+/* Porquê o IPPLS */
+.diferenciais {
+  background: var(--areia);
+}
+
+/* Missão, visão e valores (secção escura) */
+.missao {
+  --titulo-cor: var(--branco);
+  --rotulo-cor: var(--ouro);
+  --barra: var(--ouro);
+  background: var(--azul);
+}
+
+/* Estrutura */
+.estrutura {
+  background: var(--branco);
+}
+
+/* Grelha partilhada de cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1.25rem;
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+
+/*
+   7. CARDS
+*/
+.card {
+  min-width: 0;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-1);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sombra-2);
+}
+
+.card h3 {
+  margin-bottom: 0.6rem;
+  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--azul);
+}
+
+.card p {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--texto);
+}
+
+.diferenciais .card {
+  border-top: 3px solid var(--ouro);
+}
+
+.estrutura .card {
+  background: var(--papel);
+  border-left: 3px solid var(--cobre);
+}
+
+/* Cards sobre fundo escuro */
+.missao .card {
+  background: rgb(255 255 255 / 0.06);
+  border-color: rgb(255 255 255 / 0.14);
+  border-top: 3px solid var(--ouro);
+  box-shadow: none;
+}
+
+.missao .card:hover {
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: 0 20px 36px -20px rgb(0 0 0 / 0.5);
+}
+
+.missao .card h3 {
+  color: var(--branco);
+}
+
+.missao .card p {
+  color: rgb(255 255 255 / 0.86);
+}
+
+
+/*
+   8. CURSOS
+ */
+.cursos {
+  background: var(--papel);
+}
+
+.cursos-lista {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
+  counter-reset: curso;
+}
+
+.cursos-lista .card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  counter-increment: curso;
+}
+
+.cursos .img-card {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+.cursos .card:hover .img-card {
+  transform: scale(1.04);
+}
+
+/* Número do curso, gerado por contador CSS */
+.cursos .card h3 {
+  flex: 1;
+  margin: 0;
+  padding: 1.25rem 1.5rem 1.6rem;
+  font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.cursos .card h3::before {
+  content: counter(curso) ". ";
+  color: var(--cobre-texto);
+}
+
+/* Barra que cresce ao passar o rato */
+.cursos .card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 4px;
+  background: var(--cobre);
+  transition: width 0.4s var(--ease);
+}
+
+.cursos .card:hover::after {
+  width: 100%;
+}
+
+
+/*
+   9. ESTATÍSTICAS
+*/
+.estatisticas {
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gutter);
+  background: var(--azul-medio);
+  color: var(--branco);
+}
+
+.estatisticas-lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  text-align: center;
+}
+
+/* O rótulo (dt) vem primeiro no HTML e aparece por baixo do número (dd) */
+.numero {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  padding: 1.75rem 0.75rem;
+}
+
+.numero dd {
+  grid-row: 1;
+}
+
+.numero dt {
+  grid-row: 2;
+}
+
+.numero:nth-child(even) {
+  border-left: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.numero:nth-child(n + 3) {
+  border-top: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.numero dd {
+  font-size: clamp(2.5rem, 9vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ouro);
+}
+
+.numero dt {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.9);
+}
+
+
+/*
+   10. TESTEMUNHOS
+*/
+.testemunhos {
+  background: var(--papel);
+}
+
+.testemunhos-lista {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.testemunho {
+  display: flex;
+  flex-direction: column;
+}
+
+.testemunho-autor {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.testemunho-autor img {
+  flex: none;
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: cover;
+  border: 2px solid var(--ouro);
+  border-radius: 50%;
+}
+
+/* Fotos em que o rosto fica mais acima */
+.testemunho-autor img.foto-topo {
+  object-position: center 15%;
+}
+
+.testemunho-autor strong {
+  display: block;
+  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.testemunho-autor span {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cobre-texto);
+}
+
+.testemunho blockquote {
+  margin: 1.25rem 0;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--texto);
+}
+
+.testemunho blockquote p {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Estrelas alinhadas ao fundo do card */
+.estrelas {
+  display: flex;
+  gap: 0.2rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--linha);
+}
+
+.estrela {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: var(--cobre);
+  stroke: var(--cobre);
+}
+
+.estrela.vazia {
+  fill: none;
+}
+
+
+/*
+   11. CONTACTOS
+*/
+.contactos {
+  background: var(--areia);
+}
+
+.contactos-intro {
+  max-width: 52ch;
+  margin-top: 1.25rem;
+  color: var(--texto);
+}
+
+.contactos-lista {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.contacto {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1rem 1.25rem;
+  background: var(--branco);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-1);
+  color: var(--azul);
+  text-decoration: none;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.contacto:hover {
+  transform: translateY(-3px);
+  border-color: var(--cobre);
+  box-shadow: var(--sombra-2);
+}
+
+.contacto-icone {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  background: var(--azul);
+  color: var(--ouro);
+  border-radius: var(--raio);
+}
+
+.contacto-icone .icone {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.contacto-texto {
+  min-width: 0;
+}
+
+.contacto small {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--cobre-texto);
+}
+
+.contacto strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+
+/* 
+   12. MAPA
+*/
+.mapa {
+  background: var(--branco);
+}
+
+.mapa-caixa {
+  margin-top: clamp(1.5rem, 4vw, 2.25rem);
+  overflow: hidden;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-top: 4px solid var(--ouro);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-1);
+}
+
+.mapa-caixa iframe {
+  width: 100%;
+  height: clamp(300px, 46vw, 460px);
+  border: 0;
+}
+
+.mapa-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 1.1rem 1.5rem;
+  border-top: 1px solid var(--linha);
+}
+
+.mapa-info .icone {
+  color: var(--cobre-texto);
+}
+
+.mapa-info address {
+  flex: 1 1 14rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mapa-info a {
+  font-weight: 700;
+  color: var(--azul);
+  text-underline-offset: 0.25em;
+  text-decoration-color: var(--cobre);
+  text-decoration-thickness: 2px;
+}
+
+.mapa-info a:hover {
+  color: var(--cobre-texto);
+}
+
+
+/*
+   13. RODAPÉ
+ */
+.rodape {
+  background: var(--azul);
+  border-top: 4px solid var(--ouro);
+  color: rgb(255 255 255 / 0.84);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.rodape-grade {
+  display: grid;
+  gap: 2.5rem 2rem;
+  padding: clamp(3rem, 7vw, 4.5rem) var(--gutter) clamp(2rem, 5vw, 3rem);
+}
+
+.rodape-marca p {
+  max-width: 36ch;
+  margin-top: 1.25rem;
+}
+
+/* Redes sociais */
+.rodape-redes {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.rodape-redes a {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--branco);
+  border: 1px solid rgb(255 255 255 / 0.28);
+  border-radius: var(--raio);
+  transition: background var(--rapido) var(--ease), color var(--rapido) var(--ease),
+    border-color var(--rapido) var(--ease);
+}
+
+.rodape-redes a:hover {
+  background: var(--ouro);
+  border-color: var(--ouro);
+  color: var(--azul);
+}
+
+/* Colunas de ligações */
+.rodape-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ouro);
+}
+
+.rodape-titulo::before {
+  content: "";
+  width: 1.5rem;
+  height: 3px;
+  background: var(--ouro);
+}
+
+.rodape-coluna li + li {
+  margin-top: 0.6rem;
+}
+
+.rodape-coluna a {
+  display: inline-block;
+  padding-block: 0.15rem;
+  text-decoration: none;
+  transition: color var(--rapido) var(--ease);
+}
+
+.rodape-coluna a:hover {
+  color: var(--ouro);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+/* Contactos no rodapé */
+.rodape-contactos {
+  display: grid;
+  gap: 0.85rem;
+  font-style: normal;
+}
+
+.rodape-contactos p {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.rodape-contactos .icone {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-top: 0.2rem;
+  color: var(--ouro);
+}
+
+/* Barra inferior */
+.rodape-base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+  font-size: 0.85rem;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.voltar-topo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--branco);
+  text-decoration: none;
+}
+
+.voltar-topo .icone {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--ouro);
+  transition: transform var(--rapido) var(--ease);
+}
+
+.voltar-topo:hover {
+  color: var(--ouro);
+}
+
+.voltar-topo:hover .icone {
+  transform: translateY(-3px);
+}
+
+
+/* 
+   14. ANIMAÇÕES
+*/
+@keyframes revelar {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+/*
+  Os elementos só ficam escondidos se o JavaScript estiver ativo
+  (main.js acrescenta a classe .js). Sem JavaScript, tudo é visível.
+*/
+.js .reveal {
+  opacity: 0;
+}
+
+.js .reveal.visivel {
+  opacity: 1;
+  animation: revelar 0.6s var(--ease) var(--atraso, 0s) backwards;
+}
+
+.cards > .reveal:nth-child(2) { --atraso: 0.08s; }
+.cards > .reveal:nth-child(3) { --atraso: 0.16s; }
+.cards > .reveal:nth-child(4) { --atraso: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  .js .reveal {
+    opacity: 1;
+  }
+}
+
+
+/*
+   15. RESPONSIVIDADE (mobile first)
+ */
+
+/* Telemóveis muito pequenos */
+@media (max-width: 380px) {
+  .hero-botoes a {
+    flex: 1 1 100%;
+  }
+
+  .testemunho-autor img {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+
+  .marca-logo img {
+    width: 3rem;
+  }
+}
+
+/* Telemóveis grandes e tablets pequenos */
+@media (min-width: 560px) {
+  .contactos-lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 600px) {
+  .rodape-grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rodape-marca {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 700px) {
+  .cursos-lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+}
+
+@media (min-width: 800px) {
+  .testemunhos-lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tablets grandes e desktop pequeno */
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+
+  .hero-imagem::before {
+    inset: 1rem -1rem -1rem 1rem;
+  }
+
+  .hero-imagem img {
+    aspect-ratio: 5 / 4;
+  }
+
+  .sobre {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .sobre > p {
+    margin-top: 0;
+  }
+
+  .estatisticas-lista {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .numero:nth-child(n + 3) {
+    border-top: 0;
+  }
+
+  .numero:nth-child(n + 2) {
+    border-left: 1px solid rgb(255 255 255 / 0.2);
+  }
+}
+
+@media (min-width: 1000px) {
+  .contactos-lista {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .rodape-grade {
+    grid-template-columns: 1.8fr 1fr 1.3fr 1.5fr;
+  }
+
+  .rodape-marca {
+    grid-column: auto;
+  }
+}
+
+/* Menu completo no desktop (o mesmo valor está em js/main.js) */
+@media (min-width: 1200px) {
+  :root {
+    --altura-header: 4.75rem;
+  }
+
+  .menu-hamburguer,
+  .menu-overlay {
+    display: none;
+  }
+
+  #menu-principal {
+    position: static;
+    z-index: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.1rem;
+    width: auto;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+    background: transparent;
+    border-left: 0;
+    visibility: visible;
+    transform: none;
+    transition: none;
+  }
+
+  #menu-principal li + li {
+    border-top: 0;
+  }
+
+  #menu-principal a {
+    padding: 0.55rem 0.6rem;
+    font-size: 0.84rem;
+    white-space: nowrap;
+  }
+
+  #menu-principal a:hover {
+    padding-left: 0.6rem;
+  }
+
+  /* Sublinhado animado; fica sempre visível na secção atual */
+  #menu-principal a::after {
+    content: "";
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: 0.2rem;
+    height: 2px;
+    background: var(--ouro);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s var(--ease);
+  }
+
+  #menu-principal a:hover::after,
+  #menu-principal a:focus-visible::after,
+  #menu-principal a[aria-current]::after {
+    transform: scaleX(1);
+  }
+}
+
+
+/*
+   16. IMPRESSÃO
+   */
+@media print {
+  .navegacao,
+  .menu-overlay,
+  .salto,
+  .hero-botoes,
+  .mapa-caixa iframe,
+  .voltar-topo {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .js .reveal {
+    opacity: 1;
+  }
+
+  .card,
+  .contacto {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}
